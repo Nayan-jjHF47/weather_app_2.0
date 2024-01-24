@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <style>
+        body {
+            background-color: rgb(255, 127, 127);
+            color: rgb(128, 0, 94);
+            font-family: Arial, sans-serif;
+            text-align: center; /* Center aligns text within the body */
+        }
+
+        h1 {
+            color: rgb(139, 0, 72); /* Color for the title */
+        }
+
+        #weatherForm {
+            margin-top: 20px;
+            display: inline-block; /* Aligns the form horizontally center */
+        }
+
+        #weatherResult {
+            display: none;
+            margin-top: 20px;
+            display: inline-block; /* Aligns the result div horizontally center */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Weather Information</h1>
+
+    <form id="weatherForm">
+        <label for="cityInput">Enter city:</label>
+        <input type="text" id="cityInput" required>
+        <button type="button" onclick="getWeather()">Get Weather</button>
+    </form>
+
+    <div id="weatherResult">
+        <h2 id="cityName"></h2>
+        <p id="weatherCondition"></p>
+        <p id="temperature"></p>
+    </div>
+
+    <script>
+        function getWeather() {
+            var api_key = '30d4741c779ba94c470ca1f63045390a';
+            var user_input = document.getElementById('cityInput').value;
+
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${user_input}&units=imperial&APPID=${api_key}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === '404') {
+                        alert("No City Found");
+                    } else {
+                        var weather = data.weather[0].main;
+                        var temp = Math.round(data.main.temp);
+
+                        document.getElementById('cityName').innerText = `The weather in ${user_input} is: ${weather}`;
+                        document.getElementById('weatherCondition').innerText = `The temperature in ${user_input} is: ${temp}ºF`;
+                        document.getElementById('weatherResult').style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+</html>
